@@ -89,8 +89,9 @@ public class Product implements Serializable {
     }
 
     public void decreaseQuantity() {
-        if (quantity == 0) return;
-        this.quantity--;
+        if (quantity > 0) {
+            this.quantity--;
+        }
     }
 
     @Override
@@ -104,10 +105,10 @@ public class Product implements Serializable {
                 '}';
     }
 
-    public JSONObject toJSONObject(){
-        Map<String,String> map = new HashMap<>();
-        map.put("id",id);
-        map.put("quantity",String.valueOf(quantity));
+    public JSONObject toJSONObject() {
+        Map<String, String> map = new HashMap<>();
+        map.put("id", id);
+        map.put("quantity", String.valueOf(quantity));
         return new JSONObject(map);
     }
 }

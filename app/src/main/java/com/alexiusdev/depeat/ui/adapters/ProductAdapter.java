@@ -20,8 +20,8 @@ import java.util.Locale;
 
 public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private LayoutInflater inflater;
-    private Context context;
+    private final LayoutInflater inflater;
+    private final Context context;
     private List<Product> products;
     private OnQuantityChangedListener onQuantityChangedListener;
 
@@ -73,9 +73,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView productName, productTotalPrice, productSinglePrice, productQty;
-        private ImageView addBtn, removeBtn, foodIv;
-        private Product product;
+        private final TextView productName, productTotalPrice, productSinglePrice, productQty;
+        private final ImageView foodIv;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,8 +83,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             productTotalPrice = itemView.findViewById(R.id.total_price_item);
             productSinglePrice = itemView.findViewById(R.id.single_price);
             productQty = itemView.findViewById(R.id.quantity_tv);
-            addBtn = itemView.findViewById(R.id.plus_iv);
-            removeBtn = itemView.findViewById(R.id.minus_iv);
+            ImageView addBtn = itemView.findViewById(R.id.plus_iv);
+            ImageView removeBtn = itemView.findViewById(R.id.minus_iv);
             foodIv = itemView.findViewById(R.id.food_iv);
 
             addBtn.setOnClickListener(this);
@@ -94,7 +93,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View view) {
-            product = products.get(getAdapterPosition());
+            Product product = products.get(getAdapterPosition());
 
             if (view.getId() == R.id.plus_iv) {
                 product.increaseQuantity();
