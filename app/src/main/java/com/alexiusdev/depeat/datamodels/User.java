@@ -1,7 +1,15 @@
 package com.alexiusdev.depeat.datamodels;
 
-public class User {
-    private String email, id, name, surname;
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class User implements Serializable {
+    private String email;
+    private String id;
+    private String name;
+    private String surname;
+    private LocalDate birthday;
+    private Gender gender;
 
     public User() {
     }
@@ -43,5 +51,23 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public User setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+        return this;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public User setGender(Gender gender) {
+        this.gender = gender;
+        return this;
     }
 }

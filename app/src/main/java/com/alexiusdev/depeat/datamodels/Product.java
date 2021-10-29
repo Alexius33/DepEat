@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Product implements Serializable {
-    private String name, ingredients, imageUrl, id;
+    private String name;
+    private String ingredients;
+    private String imageUrl;
+    private String id;
     private int quantity;
     private double price;
 
