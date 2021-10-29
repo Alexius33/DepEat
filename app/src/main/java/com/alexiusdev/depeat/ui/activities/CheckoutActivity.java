@@ -1,5 +1,10 @@
 package com.alexiusdev.depeat.ui.activities;
 
+import static com.alexiusdev.depeat.ui.Utility.PRICE;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_PRODUCTS;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -18,27 +23,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
-
-import static com.alexiusdev.depeat.ui.Utility.PRICE;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_PRODUCTS;
+import java.util.stream.Collectors;
 
 public class CheckoutActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
     private TextView nameTv, priceTv;
     private Button payBtn;
     private CheckoutAdapter adapter;
-    private ArrayList<Product> products;
+    private List<Product> products;
     private RecyclerView checkoutRv;
     private String restaurantId;
 
 
-    @SuppressWarnings({"unchecked","ConstantConditions"})
+    @SuppressWarnings({"unchecked"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,30 +51,21 @@ public class CheckoutActivity extends AppCompatActivity implements Response.List
 
         payBtn.setOnClickListener(v -> paymentRequest(String.valueOf(getIntent().getExtras().get(RESTAURANT_ID)), "123123", priceTv.getText().toString()));
 
-        if(getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().get(RESTAURANT_PRODUCTS) instanceof ArrayList){ //get products from intent
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().get(RESTAURANT_PRODUCTS) instanceof ArrayList) { //get products from intent
             nameTv.setText(getIntent().getExtras().getString(RESTAURANT_NAME));
-            products = (ArrayList<Product>) getIntent().getExtras().get(RESTAURANT_PRODUCTS);
+            products = (List<Product>) getIntent().getExtras().get(RESTAURANT_PRODUCTS);
             priceTv.append(" ".concat(getString(R.string.currency)).concat(String.format(Locale.getDefault(), "%.2f", getIntent().getExtras().getDouble(PRICE))));
-            for(Iterator<Product> i = products.iterator(); i.hasNext();){ //remove empty products from the ArrayList
-                while(i.hasNext()) {    //TODO improve method removing empty products from ShopActivity in order to lighten the weight of the Intent
-                    Product p = i.next();
-                    if(p.getQuantity() == 0)
-                        i.remove();
-                }
-            }
+
+            products.removeIf(product -> product.getQuantity() > 0); //remove products with 0 qty from the list
         }
 
-        adapter = new CheckoutAdapter(this, getProducts());
+        adapter = new CheckoutAdapter(this, products);
         checkoutRv.setAdapter(adapter);
         checkoutRv.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
-    }
-
-    private void paymentRequest(String restaurantId, String userId, String total){
+    private void paymentRequest(String restaurantId, String userId, String total) {
         RestController restController = new RestController(this);
         JSONArray body = new JSONArray();
         body.put(restaurantId).put(userId).put(total).put(jsonArrayFromJsonProductFromArrayList(products));
@@ -89,13 +80,12 @@ public class CheckoutActivity extends AppCompatActivity implements Response.List
 
     @Override
     public void onResponse(String response) {
-        Log.d("order response",response);
+        Log.d("order response", response);
     }
 
-    private JSONArray jsonArrayFromJsonProductFromArrayList(ArrayList<Product> products){
-        ArrayList<JSONObject> jsonProduct = new ArrayList<>();
-        for(Product p : products)
-            jsonProduct.add(p.toJSONObject());
-        return new JSONArray(jsonProduct);
+    private JSONArray jsonArrayFromJsonProductFromArrayList(List<Product> products) {
+        return products.stream()
+                .map(Product::toJSONObject)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), JSONArray::new));
     }
 }

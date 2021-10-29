@@ -17,8 +17,9 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -27,26 +28,24 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public ProductAdapter(Context context, List<Product> products) {
         inflater = LayoutInflater.from(context);
-        this.products = products;
+        this.products = Objects.requireNonNull(products, "Products cannot be null");
         this.context = context;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = inflater.inflate(R.layout.item_shop, viewGroup, false);
         return new ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int index) {
-        ProductViewHolder productViewHolder = (ProductViewHolder) viewHolder;
-
-        productViewHolder.productName.setText(products.get(index).getName());
-        productViewHolder.productTotalPrice.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", products.get(index).getPrice() * products.get(index).getQuantity())));
-        productViewHolder.productSinglePrice.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", products.get(index).getPrice())));
-        productViewHolder.productQty.setText(String.valueOf(products.get(index).getQuantity()));
-        Glide.with(context).load(products.get(index).getImageUrl()).into(productViewHolder.foodIv);
+    public void onBindViewHolder(@NonNull ProductViewHolder viewHolder, int index) {
+        viewHolder.productName.setText(products.get(index).getName());
+        viewHolder.productTotalPrice.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", products.get(index).getPrice() * products.get(index).getQuantity())));
+        viewHolder.productSinglePrice.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", products.get(index).getPrice())));
+        viewHolder.productQty.setText(String.valueOf(products.get(index).getQuantity()));
+        Glide.with(context).load(products.get(index).getImageUrl()).into(viewHolder.foodIv);
 
     }
 
@@ -72,7 +71,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
-    public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView productName, productTotalPrice, productSinglePrice, productQty;
         private final ImageView foodIv;
 
@@ -93,17 +92,19 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View view) {
-            Product product = products.get(getAdapterPosition());
+            final int position = getBindingAdapterPosition();
+
+            final Product product = products.get(position);
 
             if (view.getId() == R.id.plus_iv) {
                 product.increaseQuantity();
                 onQuantityChangedListener.onChange(product.getPrice());
-                notifyItemChanged(getAdapterPosition());
+                notifyItemChanged(position);
             } else if (view.getId() == R.id.minus_iv) {
                 if (product.getQuantity() == 0) return;
                 product.decreaseQuantity();
                 onQuantityChangedListener.onChange(product.getPrice() * -1);
-                notifyItemChanged(getAdapterPosition());
+                notifyItemChanged(position);
             }
         }
 

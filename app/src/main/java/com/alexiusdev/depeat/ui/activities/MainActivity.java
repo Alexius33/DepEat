@@ -1,5 +1,8 @@
 package com.alexiusdev.depeat.ui.activities;
 
+import static com.alexiusdev.depeat.ui.Utility.EMAIL_KEY;
+import static com.alexiusdev.depeat.ui.Utility.showToast;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,9 +33,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.alexiusdev.depeat.ui.Utility.EMAIL_KEY;
-import static com.alexiusdev.depeat.ui.Utility.showToast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -128,28 +128,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case (R.id.login_menu):
-                startActivity(new Intent(this, LoginActivity.class));
-                return true;
-            case (R.id.logout_menu):
-                mAuth.signOut();
-                showToast(this, getString(R.string.user_logged_out));
-                startActivity(new Intent(this, MainActivity.class));
-                return true;
-            case (R.id.grid_menu):
-                cardViewMenuItem.setVisible(true);
-                gridViewMenuItem.setVisible(false);
-                setLayoutManager();
-                return true;
-            case (R.id.card_menu):
-                cardViewMenuItem.setVisible(false);
-                gridViewMenuItem.setVisible(true);
-                setLayoutManager();
-                return true;
-            case (R.id.profile_menu):
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
+        final int itemId = item.getItemId();
+
+        if (itemId == R.id.login_menu) {
+            startActivity(new Intent(this, LoginActivity.class));
+            return true;
+        } else if (itemId == R.id.logout_menu) {
+            mAuth.signOut();
+            showToast(this, getString(R.string.user_logged_out));
+            startActivity(new Intent(this, MainActivity.class));
+            return true;
+        } else if (itemId == R.id.grid_menu) {
+            cardViewMenuItem.setVisible(true);
+            gridViewMenuItem.setVisible(false);
+            setLayoutManager();
+            return true;
+        } else if (itemId == R.id.card_menu) {
+            cardViewMenuItem.setVisible(false);
+            gridViewMenuItem.setVisible(true);
+            setLayoutManager();
+            return true;
+        } else if (itemId == R.id.profile_menu) {
+            startActivity(new Intent(this, ProfileActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
