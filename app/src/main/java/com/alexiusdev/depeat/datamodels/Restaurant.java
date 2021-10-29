@@ -3,10 +3,17 @@ package com.alexiusdev.depeat.datamodels;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Restaurant {
-    private String name, address, imageUrl, id, phoneNum;
+import java.io.Serializable;
+
+public class Restaurant implements Serializable {
+    private String name;
+    private String address;
+    private String imageUrl;
+    private String id;
+    private String phoneNum;
     private int rating;
     private double minOrder;
+    private boolean isFavourite;
 
     public Restaurant() {
     }
@@ -102,6 +109,15 @@ public class Restaurant {
 
     public Restaurant setMinOrder(double minOrder) {
         this.minOrder = minOrder;
+        return this;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public Restaurant setFavourite(boolean favourite) {
+        isFavourite = favourite;
         return this;
     }
 }
