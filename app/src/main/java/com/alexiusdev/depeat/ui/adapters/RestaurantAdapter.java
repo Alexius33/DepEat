@@ -1,5 +1,11 @@
 package com.alexiusdev.depeat.ui.adapters;
 
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ADDRESS;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_IMAGE_URL;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_MIN_ORDER;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -22,17 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ADDRESS;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_IMAGE_URL;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_MIN_ORDER;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
-
-public class RestaurantAdapter extends RecyclerView.Adapter {
-    private LayoutInflater inflater;
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder> {
+    private final LayoutInflater inflater;
     private List<Restaurant> restaurants;
     private boolean isGridMode;
-    private Context context;
+    private final Context context;
 
     public RestaurantAdapter(Context context) {
         inflater = LayoutInflater.from(context);
@@ -48,21 +48,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         int layout = isGridMode ? R.layout.item_main_grid : R.layout.item_main_cards;
         View view = inflater.inflate(layout, viewGroup, false);
         return new RestaurantViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int index) {
-        RestaurantViewHolder restaurantViewHolder = (RestaurantViewHolder) viewHolder;
-        restaurantViewHolder.restaurantNameTV.setText(restaurants.get(index).getName());
-        restaurantViewHolder.restaurantAddressTV.setText(restaurants.get(index).getAddress());
-        restaurantViewHolder.restaurantMinOrderTV.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(),"%.2f",restaurants.get(index).getMinOrder())));
-        restaurantViewHolder.restaurantRatingTV.setText(String.format(Locale.getDefault(),"%.1f", restaurants.get(index).getRatingFloat()));
-        restaurantViewHolder.ratingBar.setProgress(restaurants.get(index).getRatingInt());
-        Glide.with(context).load(restaurants.get(index).getImageUrl()).into(restaurantViewHolder.restaurantIV);
+    public void onBindViewHolder(@NonNull RestaurantViewHolder viewHolder, int index) {
+        viewHolder.restaurantNameTV.setText(restaurants.get(index).getName());
+        viewHolder.restaurantAddressTV.setText(restaurants.get(index).getAddress());
+        viewHolder.restaurantMinOrderTV.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", restaurants.get(index).getMinOrder())));
+        viewHolder.restaurantRatingTV.setText(String.format(Locale.getDefault(), "%.1f", restaurants.get(index).getRatingFloat()));
+        viewHolder.ratingBar.setProgress(restaurants.get(index).getRatingInt());
+        Glide.with(context).load(restaurants.get(index).getImageUrl()).into(viewHolder.restaurantIV);
     }
 
     @Override
@@ -75,11 +74,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView restaurantNameTV, restaurantAddressTV, restaurantMinOrderTV, restaurantRatingTV;
-        private RatingBar ratingBar;
-        private MaterialCardView restaurantCard;
-        private ImageView restaurantIV;
+    public boolean isGridMode() {
+        return isGridMode;
+    }
+
+    public void setGridMode(boolean gridMode) {
+        isGridMode = gridMode;
+    }
+
+    public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final TextView restaurantNameTV;
+        private final TextView restaurantAddressTV;
+        private final TextView restaurantMinOrderTV;
+        private final TextView restaurantRatingTV;
+        private final RatingBar ratingBar;
+        private final MaterialCardView restaurantCard;
+        private final ImageView restaurantIV;
 
         private RestaurantViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,23 +105,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == restaurantCard.getId()){
+            final int position = getBindingAdapterPosition();
+
+            if (view.getId() == restaurantCard.getId()) {
                 context.startActivity(new Intent(context, ShopActivity.class)
-                        .putExtra(RESTAURANT_NAME, restaurants.get(getAdapterPosition()).getName())
-                        .putExtra(RESTAURANT_ADDRESS, restaurants.get(getAdapterPosition()).getAddress())
-                        .putExtra(RESTAURANT_IMAGE_URL, restaurants.get(getAdapterPosition()).getImageUrl())
-                        .putExtra(RESTAURANT_MIN_ORDER, restaurants.get(getAdapterPosition()).getMinOrder())
-                        .putExtra(RESTAURANT_ID, restaurants.get(getAdapterPosition()).getId()));
+                        .putExtra(RESTAURANT_NAME, restaurants.get(position).getName())
+                        .putExtra(RESTAURANT_ADDRESS, restaurants.get(position).getAddress())
+                        .putExtra(RESTAURANT_IMAGE_URL, restaurants.get(position).getImageUrl())
+                        .putExtra(RESTAURANT_MIN_ORDER, restaurants.get(position).getMinOrder())
+                        .putExtra(RESTAURANT_ID, restaurants.get(position).getId()));
             }
         }
-    }
-
-    public boolean isGridMode() {
-        return isGridMode;
-    }
-
-    public void setGridMode(boolean gridMode) {
-        isGridMode = gridMode;
     }
 
 }

@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexiusdev.depeat.R;
 import com.alexiusdev.depeat.datamodels.Product;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-public class CheckoutAdapter extends RecyclerView.Adapter {
+public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder> {
     private final LayoutInflater inflater;
     private final Context context;
-    private final ArrayList<Product> products;
+    private final List<Product> products;
 
-    public CheckoutAdapter(Context context, ArrayList<Product> products) {
+    public CheckoutAdapter(Context context, List<Product> products) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.products = products;
@@ -30,19 +30,18 @@ public class CheckoutAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public CheckoutViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = inflater.inflate(R.layout.item_checkout, viewGroup, false);
         return new CheckoutViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int index) {
-        Product product = products.get(index);
-        CheckoutViewHolder checkoutViewHolder = (CheckoutViewHolder) viewHolder;
+    public void onBindViewHolder(@NonNull CheckoutViewHolder viewHolder, int index) {
+        final Product product = products.get(index);
 
-        checkoutViewHolder.quantityTv.setText(String.valueOf(product.getQuantity()).concat("x"));
-        checkoutViewHolder.nameTv.setText(product.getName());
-        checkoutViewHolder.priceTv.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", product.getPrice())));
+        viewHolder.quantityTv.setText(String.valueOf(product.getQuantity()).concat("x"));
+        viewHolder.nameTv.setText(product.getName());
+        viewHolder.priceTv.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", product.getPrice())));
     }
 
     @Override
@@ -50,9 +49,10 @@ public class CheckoutAdapter extends RecyclerView.Adapter {
         return products.size();
     }
 
-
-    private static class CheckoutViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView quantityTv, nameTv, priceTv;
+    static class CheckoutViewHolder extends RecyclerView.ViewHolder {
+        private final TextView quantityTv;
+        private final TextView nameTv;
+        private final TextView priceTv;
 
         public CheckoutViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,9 +61,5 @@ public class CheckoutAdapter extends RecyclerView.Adapter {
             priceTv = itemView.findViewById(R.id.item_checkout_price);
         }
 
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 }
