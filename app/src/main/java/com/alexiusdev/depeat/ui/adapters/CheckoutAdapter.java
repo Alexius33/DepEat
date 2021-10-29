@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexiusdev.depeat.R;
 import com.alexiusdev.depeat.datamodels.Product;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class CheckoutAdapter extends RecyclerView.Adapter {
-    private LayoutInflater inflater;
-    private Context context;
-    private ArrayList<Product> products;
+    private final LayoutInflater inflater;
+    private final Context context;
+    private final ArrayList<Product> products;
 
     public CheckoutAdapter(Context context, ArrayList<Product> products) {
         inflater = LayoutInflater.from(context);
@@ -42,7 +42,7 @@ public class CheckoutAdapter extends RecyclerView.Adapter {
 
         checkoutViewHolder.quantityTv.setText(String.valueOf(product.getQuantity()).concat("x"));
         checkoutViewHolder.nameTv.setText(product.getName());
-        checkoutViewHolder.priceTv.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(),"%.2f",product.getPrice())));
+        checkoutViewHolder.priceTv.setText(context.getString(R.string.currency).concat(String.format(Locale.getDefault(), "%.2f", product.getPrice())));
     }
 
     @Override
@@ -51,8 +51,7 @@ public class CheckoutAdapter extends RecyclerView.Adapter {
     }
 
 
-
-    private class CheckoutViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private static class CheckoutViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView quantityTv, nameTv, priceTv;
 
         public CheckoutViewHolder(@NonNull View itemView) {

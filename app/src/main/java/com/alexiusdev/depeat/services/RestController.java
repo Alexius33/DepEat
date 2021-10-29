@@ -11,16 +11,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.annotations.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class RestController {
@@ -28,8 +24,8 @@ public class RestController {
     private static final String TAG = RestController.class.getSimpleName();
     private final String BASE_URL;
     private Properties properties;
-    private RequestQueue queue;
-    private Context context;
+    private final RequestQueue queue;
+    private final Context context;
 
     public RestController(Context context) {
         this.context = context;
