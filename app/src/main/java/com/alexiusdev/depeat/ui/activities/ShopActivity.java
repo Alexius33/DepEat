@@ -1,5 +1,15 @@
 package com.alexiusdev.depeat.ui.activities;
 
+import static com.alexiusdev.depeat.ui.Utility.LOGIN_REQUEST_CODE;
+import static com.alexiusdev.depeat.ui.Utility.PRICE;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ADDRESS;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_IMAGE_URL;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_MIN_ORDER;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
+import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_PRODUCTS;
+import static com.alexiusdev.depeat.ui.Utility.showToast;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,16 +43,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
-import static com.alexiusdev.depeat.ui.Utility.LOGIN_REQUEST_CODE;
-import static com.alexiusdev.depeat.ui.Utility.PRICE;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ADDRESS;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_ID;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_IMAGE_URL;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_MIN_ORDER;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_NAME;
-import static com.alexiusdev.depeat.ui.Utility.RESTAURANT_PRODUCTS;
-import static com.alexiusdev.depeat.ui.Utility.showToast;
 
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener, ProductAdapter.OnQuantityChangedListener, Response.Listener<String>, Response.ErrorListener {
 
