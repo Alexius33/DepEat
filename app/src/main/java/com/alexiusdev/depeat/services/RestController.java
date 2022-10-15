@@ -29,11 +29,9 @@ public class RestController {
 
     public RestController(Context context) {
         this.context = context;
-        properties = getApplicationProperties("app.properties");
-
-
-        BASE_URL = properties.getProperty("url.rest.basePath");
-        queue = Volley.newRequestQueue(context);
+        this.properties = getApplicationProperties("app.properties");
+        this.BASE_URL = properties.getProperty("url.rest.basePath");
+        this.queue = Volley.newRequestQueue(context);
     }
 
     public void getRestaurants(Response.Listener<String> success, Response.ErrorListener error) {
@@ -48,8 +46,6 @@ public class RestController {
         requestHelper(HttpRequestType.GET, endpoint, success, error);
     }
 
-
-    /****************** PRIVATE METHODS ******************/
     private Properties getApplicationProperties(String file) {
         try {
             properties = new Properties();
@@ -69,8 +65,9 @@ public class RestController {
     }
 
     private void requestHelper(HttpRequestType httpRequestType, String endpoint, Response.Listener<String> success, Response.ErrorListener error) {
-        if (httpRequestType == null || StringUtils.isEmpty(endpoint) || success == null || error == null)
+        if (httpRequestType == null || StringUtils.isEmpty(endpoint) || success == null || error == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
+        }
         requestHelper(httpRequestType, null, endpoint, success, error);
     }
 
@@ -80,8 +77,9 @@ public class RestController {
                 getRequest(endpoint, success, error);
                 break;
             case POST:
-                if (body == null || body.length() == 0)
+                if (body == null || body.length() == 0) {
                     throw new IllegalArgumentException("Body in POST req cannot be null nor empty");
+                }
                 postRequest(endpoint, body, success, error);
                 break;
         }
