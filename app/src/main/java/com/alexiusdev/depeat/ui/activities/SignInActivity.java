@@ -53,8 +53,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         passwordET.addTextChangedListener(signInButtonTextWatcher);
         confirmPasswordET.addTextChangedListener(signInButtonTextWatcher);
 
-        if(isValidEmail(getIntent().getStringExtra(EMAIL_KEY)))
+        if (isValidEmail(getIntent().getStringExtra(EMAIL_KEY))) {
             emailET.setText(getIntent().getStringExtra(EMAIL_KEY));
+        }
     }
 
     @Override
@@ -66,11 +67,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private TextWatcher signInButtonTextWatcher = new TextWatcher() {
+    private final TextWatcher signInButtonTextWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
         @Override
         public void afterTextChanged(Editable editable) {
             boolean check = isValidEmail(emailET.getText().toString()) &&  //enable button only if the mail is valid and
@@ -85,13 +90,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     };
 
-    private void createAccount(final String email, final String password){
+    private void createAccount(final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 //Sign in success, update UI with the signed-in user's information
                 Log.d("TAG", "createUserWithEmail:success");
                 FirebaseUser user = mAuth.getCurrentUser();
-                new User(email,"", nameET.getText().toString(), surnameET.getText().toString());
+                new User(email, "", nameET.getText().toString(), surnameET.getText().toString());
                 finish();
             } else {
                 //If sign in fails, display a message to the user
@@ -99,25 +104,5 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 showToast(SignInActivity.this, "Authentication failed.");
             }
         });
-/*
-
-        RestController restController = new RestController(this);
-        String endPoint = "auth/local/register/";
-        Map<String, String> mapBody = new HashMap<>();
-        mapBody.put("username",email);
-        mapBody.put("email", email);
-        mapBody.put("password", password);
-        JSONObject body = new JSONObject(mapBody);
-        restController.postRequest(endPoint,body,this,this);*/
     }
-
-    /*@Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
-
-    @Override
-    public void onResponse(String response) {
-
-    }*/
 }
