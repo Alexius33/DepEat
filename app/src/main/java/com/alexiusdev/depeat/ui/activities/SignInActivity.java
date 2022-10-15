@@ -1,6 +1,10 @@
 package com.alexiusdev.depeat.ui.activities;
 
-import android.content.Intent;
+import static com.alexiusdev.depeat.ui.Utility.EMAIL_KEY;
+import static com.alexiusdev.depeat.ui.Utility.MIN_LENGTH_PSW;
+import static com.alexiusdev.depeat.ui.Utility.isValidEmail;
+import static com.alexiusdev.depeat.ui.Utility.showToast;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,26 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.alexiusdev.depeat.R;
-import com.alexiusdev.depeat.datamodels.User;
-import com.alexiusdev.depeat.services.RestController;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.alexiusdev.depeat.ui.Utility.*;
+import com.alexiusdev.depeat.R;
+import com.alexiusdev.depeat.datamodels.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener/*, Response.Listener<String>, Response.ErrorListener*/ {
